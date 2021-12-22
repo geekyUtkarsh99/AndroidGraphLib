@@ -3,14 +3,15 @@ package com.redoven.simplegraphlibrary
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.view.Surface
-import android.view.SurfaceHolder
-import android.view.SurfaceView
+import android.util.Log
 import android.view.View
 
 class GraphView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+
+    //tag
+    private val TAG = "GraphView"
 
     //scale
     private val scale = resources.displayMetrics.density
@@ -21,8 +22,8 @@ class GraphView @JvmOverloads constructor(
     //props variable
     private val path = Path()
     private val paint = Paint()
-    private var color = Color.BLUE
-    private var strokewidth = 15f
+    var color = Color.BLUE
+    var strokewidth = 15f
 
     //temp
     private val w = resources.displayMetrics.widthPixels
@@ -45,10 +46,12 @@ class GraphView @JvmOverloads constructor(
 
     fun addValue(data:ArrayList<ArrayList<Double>>){
         this.data = data
+        Log.d(TAG, "addValue: valuechanged , size : ${this.data.size}")
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+//        Log.d(TAG, "onDraw: outside ${data.size}")
         if (data.size != 0) {
             init()
 
@@ -57,50 +60,54 @@ class GraphView @JvmOverloads constructor(
             })
             canvas?.drawPath(path, paint)
 
+//            Log.d(TAG, "onDraw: inside")
         }
+        invalidate()
     }
 
 
     private fun init(){
+        //data filtering
+       data.apply {
 
-        xDiv = gw/data.size
-        yDiv = gh/data.size
+           //scale of x
+           sortBy { it[0] }
 
+           xDiv = gw/Math.abs(get(0).get(0) - get(lastIndex).get(0)).toFloat()
+
+           //scale of y
+           sortBy { it[1] }
+           yDiv = gh/Math.abs(get(0).get(1)-get(lastIndex).get(1)).toFloat()
+       }
+
+        //graphic props setup
         paint.apply {
             strokeWidth = this@GraphView.strokewidth
             color = this@GraphView.color
             style = Paint.Style.STROKE
         }
 
-        path.moveTo(0.0f,gh)
-        path.lineTo( 250.0f,gh + 250.0f)
-        path.moveTo(250.0f,gh + 250.0f)
-        path.lineTo(300.0f,gh + 270.0f)
+        //path generation method
+        generateGraph()
     }
 
     private fun generateGraph(){
         var j = 0
         for (i in data){
 
-
-            path.moveTo(j*xDiv,  differentiateYAxis(i.get(1).toFloat()))
+            path.moveTo(i.get(0).toFloat()*xDiv, i.get(1).toFloat()*yDiv)
 
             //check if end reached
             if ((j+1) < data.size)
-            path.lineTo((j+1)*xDiv,  differentiateYAxis(data.get(j+1).get(1).toFloat()))
+            path.lineTo(data.get(j+1).get(0).toFloat()*xDiv,
+                data.get(j+1).get(1).toFloat()*yDiv)
 
             //update legend index
                   j++
         }
     }
 
-    private fun differentiateYAxis(value:Float):Float{
-
-
-
-        return 0.0f
-    }
-
 
 
 }
+
