@@ -1,5 +1,7 @@
 package com.redoven.graphlib
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.redoven.graphlib.databinding.ActivityMainBinding
@@ -10,9 +12,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
@@ -21,73 +26,73 @@ class MainActivity : AppCompatActivity() {
             val data = ArrayList<ArrayList<Double>>()
 
             data.add(ArrayList<Double>().apply {
-                add(10.0)
-                add(12.0)
-            })
-            data.add(ArrayList<Double>().apply {
-                add(15.0)
-                add(256.0)
-            })
-            data.add(ArrayList<Double>().apply {
-                add(48.0)
+                add(11.0)
                 add(14.0)
             })
             data.add(ArrayList<Double>().apply {
-                add(365.0)
-                add(145.0)
+                add(20.0)
+                add(265.0)
             })
             data.add(ArrayList<Double>().apply {
-                add(12.0)
-                add(32.0)
+                add(30.0)
+                add(45.0)
             })
             data.add(ArrayList<Double>().apply {
-                add(14.25)
-                add(12.145)
+                add(40.0)
+                add(325.0)
             })
             data.add(ArrayList<Double>().apply {
-                add(125.45)
-                add(123.12)
+                add(50.0)
+                add(11.0)
             })
             data.add(ArrayList<Double>().apply {
-                add(19.0)
-                add(15.0)
+                add(60.25)
+                add(154.145)
+            })
+            data.add(ArrayList<Double>().apply {
+                add(70.45)
+                add(24.12)
+            })
+            data.add(ArrayList<Double>().apply {
+                add(80.0)
+                add(132.0)
             })
         data.add(ArrayList<Double>().apply {
-            add(20.0)
-            add(12.0)
+            add(90.0)
+            add(133.0)
         })
         data.add(ArrayList<Double>().apply {
-            add(21.0)
-            add(256.0)
+            add(100.0)
+            add(134.0)
         })
         data.add(ArrayList<Double>().apply {
-            add(22.0)
-            add(14.0)
+            add(110.0)
+            add(135.0)
         })
         data.add(ArrayList<Double>().apply {
-            add(23.0)
-            add(145.0)
+            add(120.0)
+            add(136.0)
         })
         data.add(ArrayList<Double>().apply {
-            add(12.0)
-            add(32.0)
+            add(130.0)
+            add(137.0)
         })
         data.add(ArrayList<Double>().apply {
-            add(24.25)
-            add(12.145)
+            add(140.0)
+            add(138.145)
         })
         data.add(ArrayList<Double>().apply {
-            add(25.45)
-            add(123.12)
+            add(150.0)
+            add(139.12)
         })
         data.add(ArrayList<Double>().apply {
-            add(26.0)
-            add(15.0)
+            add(160.0)
+            add(140.0)
         })
 
 
         findViewById<GraphView>(R.id.graph).apply{
-            strokewidth = 3f
+            strokewidth = 4.5f
             addValue(data)
         }
 

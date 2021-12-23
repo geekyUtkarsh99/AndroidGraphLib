@@ -37,22 +37,38 @@ class GraphView @JvmOverloads constructor(
     private var xDiv = 5f
     private var yDiv = 5f
 
+    //min max data
+    private var minX = 0.0f
+    private var maxX = 0.0f
+    private var minY = 0.0f
+    private var maxY = 0.0f
+
     //graph dimensions
-    private var gh = 250.0f*scale
-    private var gw = 250.0f*scale
+    private var gh = 0.0f
+    private var gw = 0.0f
 
     //data
     private var data = ArrayList<ArrayList<Double>>()
 
     fun addValue(data:ArrayList<ArrayList<Double>>){
         this.data = data
+
         Log.d(TAG, "addValue: valuechanged , size : ${this.data.size}")
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+
+        gh = h.toFloat()
+        gw = w.toFloat()
+        Log.d(TAG, "onSizeChanged: size update w : $gw , h: $gh")
+
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 //        Log.d(TAG, "onDraw: outside ${data.size}")
-        if (data.size != 0) {
+        if (data.size != 0 && gh != 0.0f) {
             init()
 
             canvas?.drawRect(Rect(0, 0, w, h), Paint().apply {
@@ -67,18 +83,36 @@ class GraphView @JvmOverloads constructor(
 
 
     private fun init(){
-        //data filtering
-       data.apply {
 
-           //scale of x
-           sortBy { it[0] }
+        if (gh != 0.0f) {
 
-           xDiv = gw/Math.abs(get(0).get(0) - get(lastIndex).get(0)).toFloat()
+            //data filtering
+            data.apply {
+                //scale of y
+                sortBy { it[1] }
+//                Log.d(
+//                    TAG,
+//                    "addValue: scale1y : ${get(0).get(1)} ,scale2y: ${get(lastIndex).get(1)} "
+//                )
+                minY = get(0).get(1).toFloat()
+                maxY = get(lastIndex).get(1).toFloat()
+//                Log.d(TAG, "init: scale of  h: ${gh} y1: ${gh/(get(lastIndex).get(1) - get(0).get(1)).toFloat()}")
+                yDiv = gh/(maxY - minY)
 
-           //scale of y
-           sortBy { it[1] }
-           yDiv = gh/Math.abs(get(0).get(1)-get(lastIndex).get(1)).toFloat()
-       }
+                //scale of x
+                sortBy { it[0] }
+//                Log.d(
+//                    TAG,
+//                    "addValue: scale1x : ${get(0).get(0)} ,scale2x: ${get(lastIndex).get(0)} "
+//                )
+                minX = get(0).get(0).toFloat()
+                maxX = get(lastIndex).get(0).toFloat()
+                xDiv = gw /(maxX - minX)
+
+//                Log.d(TAG, "addValue: scale x : $xDiv , y : $yDiv")
+
+            }
+        }
 
         //graphic props setup
         paint.apply {
@@ -91,17 +125,33 @@ class GraphView @JvmOverloads constructor(
         generateGraph()
     }
 
+    /**
+     * formula...f(x) = (b-a)(x-min)/(max-min)
+     */
     private fun generateGraph(){
         var j = 0
         for (i in data){
 
-            path.moveTo(i.get(0).toFloat()*xDiv, i.get(1).toFloat()*yDiv)
+            val tempx = (i.get(0).toFloat() - minX)*xDiv
+            val tempy = gh -  (i.get(1).toFloat() - minY)*yDiv
+
+//            Log.d(TAG, "generateGraph: observe x : $tempx , y : $tempy")
+            path.moveTo(tempx, tempy)
+//            path.moveTo(gh - i.get(1).toFloat()*yDiv, i.get(0).toFloat()*xDiv)
 
             //check if end reached
-            if ((j+1) < data.size)
-            path.lineTo(data.get(j+1).get(0).toFloat()*xDiv,
-                data.get(j+1).get(1).toFloat()*yDiv)
+            if ((j+1) < data.size) {
+                val tempxline = (data.get(j + 1).get(0).toFloat() - minX) * xDiv
+                val tempyline =  gh - (data.get(j + 1).get(1).toFloat() - minY) * yDiv
+//                Log.d(TAG, "generateGraph: observe xl : $tempxline , yl : $tempyline")
 
+                path.lineTo(
+                    tempxline,
+                    tempyline
+                )
+//                path.lineTo(gh - data.get(j + 1).get(1).toFloat() * yDiv,
+//                    data.get(j + 1).get(0).toFloat() * xDiv)
+            }
             //update legend index
                   j++
         }
