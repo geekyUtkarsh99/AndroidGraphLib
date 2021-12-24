@@ -4,11 +4,12 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 
 class GraphView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : View(context, attrs, defStyleAttr),View.OnTouchListener {
 
     //tag
     private val TAG = "GraphView"
@@ -54,6 +55,7 @@ class GraphView @JvmOverloads constructor(
         this.data = data
 
         Log.d(TAG, "addValue: valuechanged , size : ${this.data.size}")
+        requestLayout()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -67,7 +69,7 @@ class GraphView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-//        Log.d(TAG, "onDraw: outside ${data.size}")
+        Log.d(TAG, "onDraw: outside ${data.size}")
         if (data.size != 0 && gh != 0.0f) {
             init()
 
@@ -76,9 +78,10 @@ class GraphView @JvmOverloads constructor(
             })
             canvas?.drawPath(path, paint)
 
-//            Log.d(TAG, "onDraw: inside")
+            Log.d(TAG, "onDraw: inside")
         }
         invalidate()
+        requestLayout()
     }
 
 
@@ -157,6 +160,15 @@ class GraphView @JvmOverloads constructor(
         }
     }
 
+    //value indicator
+    override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+
+        if (p1?.action == MotionEvent.ACTION_DOWN){
+
+        }
+
+        return true
+    }
 
 
 }
