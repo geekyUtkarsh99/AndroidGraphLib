@@ -9,7 +9,7 @@ import android.view.View
 
 class GraphView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr),View.OnTouchListener {
+) : View(context, attrs, defStyleAttr){
 
     //tag
     private val TAG = "GraphView"
@@ -23,8 +23,13 @@ class GraphView @JvmOverloads constructor(
     //props variable
     private val path = Path()
     private val paint = Paint()
-    var color = Color.BLUE
+    var color = Color.parseColor("#8C9EFF")
     var strokewidth = 15f
+
+    //area vars
+    private val arPath = Path()
+    private val arPaint = Paint()
+    var arColor = Color.parseColor("#40D1EEFC")
 
     //temp
     private val w = resources.displayMetrics.widthPixels
@@ -47,6 +52,10 @@ class GraphView @JvmOverloads constructor(
     //graph dimensions
     private var gh = 0.0f
     private var gw = 0.0f
+    
+    //graph coordinates
+    private var xCord = 0.0f
+    private var yCord = 0.0f
 
     //data
     private var data = ArrayList<ArrayList<Double>>()
@@ -55,37 +64,6 @@ class GraphView @JvmOverloads constructor(
         this.data = data
 
         Log.d(TAG, "addValue: valuechanged , size : ${this.data.size}")
-        requestLayout()
-    }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-
-        gh = h.toFloat()
-        gw = w.toFloat()
-        Log.d(TAG, "onSizeChanged: size update w : $gw , h: $gh")
-
-    }
-
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        Log.d(TAG, "onDraw: outside ${data.size}")
-        if (data.size != 0 && gh != 0.0f) {
-            init()
-
-            canvas?.drawRect(Rect(0, 0, w, h), Paint().apply {
-                color = Color.WHITE
-            })
-            canvas?.drawPath(path, paint)
-
-            Log.d(TAG, "onDraw: inside")
-        }
-        invalidate()
-        requestLayout()
-    }
-
-
-    private fun init(){
 
         if (gh != 0.0f) {
 
@@ -117,11 +95,47 @@ class GraphView @JvmOverloads constructor(
             }
         }
 
+        requestLayout()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+
+        gh = h.toFloat()
+        gw = w.toFloat()
+        Log.d(TAG, "onSizeChanged: size update w : $gw , h: $gh")
+
+    }
+
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+        if (data.size != 0 && gh != 0.0f) {
+            init()
+
+            canvas?.drawRect(Rect(0, 0, w, h), Paint().apply {
+                color = Color.WHITE
+            })
+            canvas?.drawPath(path, paint)
+            canvas?.drawPath(arPath,arPaint)
+
+        }
+        invalidate()
+        requestLayout()
+    }
+
+
+    private fun init(){
+
         //graphic props setup
         paint.apply {
             strokeWidth = this@GraphView.strokewidth
             color = this@GraphView.color
             style = Paint.Style.STROKE
+        }
+
+        arPaint.apply {
+            style = Paint.Style.FILL
+            color = this@GraphView.arColor
         }
 
         //path generation method
@@ -135,41 +149,76 @@ class GraphView @JvmOverloads constructor(
         var j = 0
         for (i in data){
 
+            //stroke
             val tempx = (i.get(0).toFloat() - minX)*xDiv
             val tempy = gh -  (i.get(1).toFloat() - minY)*yDiv
-
-//            Log.d(TAG, "generateGraph: observe x : $tempx , y : $tempy")
             path.moveTo(tempx, tempy)
-//            path.moveTo(gh - i.get(1).toFloat()*yDiv, i.get(0).toFloat()*xDiv)
+
+
+            //fill
+            arPath.apply {
+                moveTo(tempx, gh)
+                lineTo(tempx, tempy)
+//                lineTo(tempx,tempy)
+            }
 
             //check if end reached
             if ((j+1) < data.size) {
                 val tempxline = (data.get(j + 1).get(0).toFloat() - minX) * xDiv
                 val tempyline =  gh - (data.get(j + 1).get(1).toFloat() - minY) * yDiv
-//                Log.d(TAG, "generateGraph: observe xl : $tempxline , yl : $tempyline")
 
+                //stroke
                 path.lineTo(
                     tempxline,
                     tempyline
                 )
-//                path.lineTo(gh - data.get(j + 1).get(1).toFloat() * yDiv,
-//                    data.get(j + 1).get(0).toFloat() * xDiv)
+
+                //fill
+                arPath.apply {
+                    lineTo(tempxline,tempyline)
+//                    moveTo(tempxline,tempyline)
+                    lineTo(tempxline,gh)
+                }
+
             }
+
             //update legend index
                   j++
         }
     }
 
-    //value indicator
-    override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+    private fun drawArea(x:Float,y:Float,dx:Float,dy:Float){
 
-        if (p1?.action == MotionEvent.ACTION_DOWN){
+
+
+
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        performClick()
+
+
+        with(event){
+
+            when(event?.action){
+
+                MotionEvent.ACTION_DOWN->{
+
+                    Log.d(TAG, "onTouchEvent: $x , $y")
+
+                }
+
+                else -> {  }
+            }
 
         }
 
-        return true
+        return super.onTouchEvent(event)
     }
 
-
+    override fun performClick(): Boolean {
+        return super.performClick()
+    }
 }
 

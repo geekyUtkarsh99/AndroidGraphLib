@@ -109,15 +109,13 @@ class MainActivity : AppCompatActivity() {
         var dataset = MutableLiveData<ArrayList<ArrayList<Double>>>()
 
         retroinst.service.getList("bitcoin" , mapOf(
-
-            "vs_currency " to "inr",
-            "days " to "1"
-
+            "vs_currency" to "inr",
+            "days" to "30"
         ) ).enqueue(object:Callback<data>{
             override fun onResponse(call: Call<data>, response: Response<data>) {
                 val res = response.body()
 
-                Log.d(TAG, "onResponse: ${res?.prices.toString()}")
+                Log.d(TAG, "onResponse: ${res?.prices}")
                 dataset.value= res?.prices
 
             }
@@ -131,7 +129,6 @@ class MainActivity : AppCompatActivity() {
         dataset.observe(this, {
             findViewById<GraphView>(R.id.graph).apply{
                 if (it != null) {
-
                     strokewidth = 4.5f
                     addValue(it)
                 }

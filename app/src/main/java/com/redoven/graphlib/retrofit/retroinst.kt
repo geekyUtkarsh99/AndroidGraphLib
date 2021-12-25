@@ -14,7 +14,6 @@ object retroinst {
             .baseUrl("https://api.coingecko.com/api/v3/")
             .client(OkHttpClient())
             .build().create(calls::class.java)
-
     }
 
 }

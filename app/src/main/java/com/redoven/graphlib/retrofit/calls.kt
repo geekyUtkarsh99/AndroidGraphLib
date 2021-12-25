@@ -9,7 +9,7 @@ import retrofit2.http.QueryMap
 
 interface calls {
 
-    @GET("/coins/{id}/market_chart")
+    @GET("coins/{id}/market_chart")
     fun getList(@Path("id")id:String , @QueryMap map:Map<String,String>): Call<data>
 
 
