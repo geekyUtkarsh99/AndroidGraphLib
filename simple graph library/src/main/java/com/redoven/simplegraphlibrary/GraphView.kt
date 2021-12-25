@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
+import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
 
@@ -159,7 +160,6 @@ class GraphView @JvmOverloads constructor(
             arPath.apply {
                 moveTo(tempx, gh)
                 lineTo(tempx, tempy)
-//                lineTo(tempx,tempy)
             }
 
             //check if end reached
@@ -176,7 +176,6 @@ class GraphView @JvmOverloads constructor(
                 //fill
                 arPath.apply {
                     lineTo(tempxline,tempyline)
-//                    moveTo(tempxline,tempyline)
                     lineTo(tempxline,gh)
                 }
 
@@ -187,29 +186,28 @@ class GraphView @JvmOverloads constructor(
         }
     }
 
-    private fun drawArea(x:Float,y:Float,dx:Float,dy:Float){
-
-
-
-
-    }
-
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         performClick()
 
+        val x = event?.getX(event.actionIndex)
+        val y = event?.getY(event.actionIndex)
 
-        with(event){
+        with(event!!){
 
-            when(event?.action){
+            when(event.actionMasked){
 
-                MotionEvent.ACTION_DOWN->{
+                MotionEvent.ACTION_MOVE->{
 
-                    Log.d(TAG, "onTouchEvent: $x , $y")
+                    Log.d(TAG, "onTouchEvent: ${x} , ${y}")
 
                 }
 
-                else -> {  }
+                else -> {
+                    Log.d(TAG, "onTouchEvent: ${getX(actionIndex)} , ${getY(actionIndex)}")
+
+
+                }
             }
 
         }
@@ -220,5 +218,7 @@ class GraphView @JvmOverloads constructor(
     override fun performClick(): Boolean {
         return super.performClick()
     }
+
+
 }
 
