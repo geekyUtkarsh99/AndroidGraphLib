@@ -7,6 +7,9 @@ import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
+import java.text.DateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GraphView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -119,9 +122,10 @@ class GraphView @JvmOverloads constructor(
             canvas?.drawPath(path, paint)
             canvas?.drawPath(arPath,arPaint)
 
+        }else {
+            invalidate()
+            requestLayout()
         }
-        invalidate()
-        requestLayout()
     }
 
 
@@ -155,6 +159,8 @@ class GraphView @JvmOverloads constructor(
             val tempy = gh -  (i.get(1).toFloat() - minY)*yDiv
             path.moveTo(tempx, tempy)
 
+
+            Log.d(TAG, "generateGraph: date : ${convertToDate(tempx,minX,xDiv)}")
 
             //fill
             arPath.apply {
@@ -197,22 +203,29 @@ class GraphView @JvmOverloads constructor(
 
             when(event.actionMasked){
 
-                MotionEvent.ACTION_MOVE->{
+                MotionEvent.ACTION_DOWN->{
 
                     Log.d(TAG, "onTouchEvent: ${x} , ${y}")
 
+                    return true
+                }
+                
+                MotionEvent.ACTION_MOVE->{
+
+                    Log.d(TAG, "onTouchEvent: moved  ${x} , ${y}")
+                    
+                    return true
                 }
 
                 else -> {
-                    Log.d(TAG, "onTouchEvent: ${getX(actionIndex)} , ${getY(actionIndex)}")
+//                    Log.d(TAG, "onTouchEvent: ${getX(actionIndex)} , ${getY(actionIndex)}")
 
-
+                    return false
                 }
             }
 
         }
 
-        return super.onTouchEvent(event)
     }
 
     override fun performClick(): Boolean {
@@ -220,5 +233,12 @@ class GraphView @JvmOverloads constructor(
     }
 
 
+    fun convertToDate(value:Float,min:Float,div:Float) : String{
+        val time = (value/div) + min
+        val Cal = Calendar.getInstance(Locale.ENGLISH)
+        Cal.timeInMillis = (time*1000L).toLong()
+
+        return DateFormat.getInstance().format(Cal.time)
+    }
 }
 
