@@ -1,5 +1,6 @@
 package com.redoven.simplegraphlibrary
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -7,9 +8,12 @@ import android.util.Log
 import android.view.DragEvent
 import android.view.MotionEvent
 import android.view.View
+import java.sql.Timestamp
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import java.time.*
 
 class GraphView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -159,9 +163,6 @@ class GraphView @JvmOverloads constructor(
             val tempy = gh -  (i.get(1).toFloat() - minY)*yDiv
             path.moveTo(tempx, tempy)
 
-
-            Log.d(TAG, "generateGraph: date : ${convertToDate(tempx,minX,xDiv)}")
-
             //fill
             arPath.apply {
                 moveTo(tempx, gh)
@@ -192,6 +193,23 @@ class GraphView @JvmOverloads constructor(
         }
     }
 
+
+    private fun findMatch(x:Float):ArrayList<Double>{
+        val temp = ArrayList<Double>()
+
+        for (i in data){
+            if((i.get(0).toFloat() - minX)*xDiv == x){
+
+                temp.add(i.get(0))
+                temp.add(i.get(1))
+
+            }
+        }
+
+        return temp
+    }
+
+    //handle touch events
     override fun onTouchEvent(event: MotionEvent?): Boolean {
 
         performClick()
@@ -205,7 +223,8 @@ class GraphView @JvmOverloads constructor(
 
                 MotionEvent.ACTION_DOWN->{
 
-                    Log.d(TAG, "onTouchEvent: ${x} , ${y}")
+                    Log.d(TAG, "onTouchEvent: ${findMatch(x!!)}")
+
 
                     return true
                 }
@@ -233,12 +252,5 @@ class GraphView @JvmOverloads constructor(
     }
 
 
-    fun convertToDate(value:Float,min:Float,div:Float) : String{
-        val time = (value/div) + min
-        val Cal = Calendar.getInstance(Locale.ENGLISH)
-        Cal.timeInMillis = (time*1000L).toLong()
-
-        return DateFormat.getInstance().format(Cal.time)
-    }
 }
 
