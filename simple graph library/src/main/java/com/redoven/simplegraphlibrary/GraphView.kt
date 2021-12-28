@@ -240,12 +240,12 @@ class GraphView @JvmOverloads constructor(
                     if (x!! < gw) {
 //                    Log.d(TAG, "onTouchEvent: ${String.format("%.2f",findMatch(x!!).get(0))}")
 
-                        xCord = x
-                        yCord = y!!
+//                        xCord = x
+//                        yCord = y!!
                         findMatch(x).apply {
                             if (size != 0){
-//                                xCord =  (get(0).toFloat()-minX)*xDiv
-//                                yCord = (get(1).toFloat()-minY)*yDiv
+                                xCord =  (get(0).toFloat()-minX)*xDiv
+                                yCord = (get(1).toFloat()-minY)*yDiv
                                 viewPoint = true
                             }else {
                                 viewPoint = false
@@ -262,12 +262,12 @@ class GraphView @JvmOverloads constructor(
 //                    Log.d(TAG, "onTouchEvent: moved  ${x} , ${y}")
                     if (x!! < gw){
 
-                        xCord = x
-                        yCord = y!!
+//                        xCord = x
+//                        yCord = y!!
                         findMatch(x).apply {
                             if (size != 0){
-//                                xCord =  (get(0).toFloat()-minX)*xDiv
-//                                yCord = (get(1).toFloat()-minY)*yDiv
+                                xCord =  (get(0).toFloat()-minX)*xDiv
+                                yCord = (get(1).toFloat()-minY)*yDiv
                                 viewPoint = true
                             }else {
                                 viewPoint = false

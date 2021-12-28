@@ -19,12 +19,21 @@ class ValuePointer {
     private val path = Path()
     private val paint = Paint()
 
+    private var isDrawn = false
+
     fun drawPoint(c: Canvas ,x:Float,y:Float , w:Float,h:Float,flag:Boolean){
 
-    init()
-    drawLine(x, y, w, h)
-    c.drawPath(path, paint)
-
+        if (flag) {
+            if (isDrawn){
+            init()
+            isDrawn=!isDrawn
+            }
+            c.drawLine(x,h,x,30.0f,paint)
+//            c.drawPath(path, paint)
+        }else {
+            path.reset()
+            isDrawn=!isDrawn
+        }
     }
 
     private fun init(){
