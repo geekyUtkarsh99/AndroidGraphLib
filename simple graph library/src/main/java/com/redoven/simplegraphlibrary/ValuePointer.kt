@@ -19,6 +19,8 @@ class ValuePointer {
     private val path = Path()
     private val paint = Paint()
 
+    private val cPaint = Paint()
+
     private var isDrawn = false
 
     fun drawPoint(c: Canvas ,x:Float,y:Float , w:Float,h:Float,flag:Boolean){
@@ -28,7 +30,8 @@ class ValuePointer {
             init()
             isDrawn=!isDrawn
             }
-            c.drawLine(x,h,x,30.0f,paint)
+            c.drawLine(x,h,x,0f,paint)
+            c.drawCircle(x,h - y,4.5f*1.25f,cPaint)
 //            c.drawPath(path, paint)
         }else {
             path.reset()
@@ -40,6 +43,9 @@ class ValuePointer {
         paint.apply {
             color = Color.BLACK
             style = Paint.Style.STROKE
+        }
+        cPaint.apply {
+            color = Color.BLUE
         }
     }
 
