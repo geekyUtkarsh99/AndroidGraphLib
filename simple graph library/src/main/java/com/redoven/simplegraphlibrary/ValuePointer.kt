@@ -16,26 +16,21 @@ class ValuePointer {
 
 
     //graphics
-    private val path = Path()
     private val paint = Paint()
-
     private val cPaint = Paint()
 
-    private var isDrawn = false
+    private val tPaint = Paint()
 
-    fun drawPoint(c: Canvas ,x:Float,y:Float , w:Float,h:Float,flag:Boolean){
+    fun drawPoint(c: Canvas ,x:Float,y:Float , w:Float,h:Float,minX:Float,minY:Float,xDiv:Float,yDiv:Float,flag:Boolean){
 
         if (flag) {
-            if (isDrawn){
+
             init()
-            isDrawn=!isDrawn
-            }
+
             c.drawLine(x,h,x,0f,paint)
             c.drawCircle(x,h - y,4.5f*1.25f,cPaint)
-//            c.drawPath(path, paint)
-        }else {
-            path.reset()
-            isDrawn=!isDrawn
+            c.drawText(convertToDate(x,minX,xDiv),x,h - y,tPaint)
+
         }
     }
 
@@ -47,18 +42,23 @@ class ValuePointer {
         cPaint.apply {
             color = Color.BLUE
         }
+        tPaint.apply {
+            color = Color.BLUE
+            textSize = 35f
+        }
     }
 
-    private fun drawLine(x:Float,y:Float, w:Float,h:Float){
-        path.moveTo(x,h)
-        path.lineTo(x,30.0f)
-    }
 
     //convert timestamp to date
     fun convertToDate(value:Float,min:Float,div:Float) : String{
         val time = (value/div) + min
         val stamp = Timestamp(time.toLong())
         return Date(stamp.time).toString()
+    }
+
+    fun convertToYValue(value:Float,min:Float,div:Float):Float{
+
+        return (value/div)+min
     }
 
 }

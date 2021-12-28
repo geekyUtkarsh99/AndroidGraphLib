@@ -132,7 +132,7 @@ class GraphView @JvmOverloads constructor(
                 canvas?.drawPath(arPath, arPaint)
                 drawComplete = true
 
-            pointer.drawPoint(canvas!!,xCord,yCord,gw,gh,viewPoint)
+            pointer.drawPoint(canvas!!,xCord,yCord,gw,gh,minX,minY,xDiv,yDiv,viewPoint)
             invalidate()
         }else {
             invalidate()
@@ -161,6 +161,7 @@ class GraphView @JvmOverloads constructor(
 
     /**
      * formula...f(x) = (b-a)(x-min)/(max-min)
+     * scale...s = (b-a)/(max-min)
      */
     private fun generateGraph(){
         var j = 0
