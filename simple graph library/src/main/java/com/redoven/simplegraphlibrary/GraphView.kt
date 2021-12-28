@@ -33,6 +33,7 @@ class GraphView @JvmOverloads constructor(
     private val paint = Paint()
     var color = Color.parseColor("#8C9EFF")
     var strokewidth = 15f
+    private val pointer = ValuePointer()
 
     //area vars
     private val arPath = Path()
@@ -42,7 +43,6 @@ class GraphView @JvmOverloads constructor(
     //temp
     private val w = resources.displayMetrics.widthPixels
     private val h = resources.displayMetrics.heightPixels
-
 
     /**
      * DATA VARIABLES
@@ -60,6 +60,10 @@ class GraphView @JvmOverloads constructor(
     //graph dimensions
     private var gh = 0.0f
     private var gw = 0.0f
+
+    //bools
+    private var viewPoint = false
+    private var drawComplete = false
     
     //graph coordinates
     private var xCord = 0.0f
@@ -118,14 +122,18 @@ class GraphView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (data.size != 0 && gh != 0.0f) {
-            init()
+            if (!drawComplete) {
+                init()
+            }
+                canvas?.drawRect(Rect(0, 0, w, h), Paint().apply {
+                    color = Color.WHITE
+                })
+                canvas?.drawPath(path, paint)
+                canvas?.drawPath(arPath, arPaint)
+                drawComplete = true
 
-            canvas?.drawRect(Rect(0, 0, w, h), Paint().apply {
-                color = Color.WHITE
-            })
-            canvas?.drawPath(path, paint)
-            canvas?.drawPath(arPath,arPaint)
-
+            pointer.drawPoint(canvas!!,xCord,yCord,gw,gh,viewPoint)
+            invalidate()
         }else {
             invalidate()
             requestLayout()
@@ -163,6 +171,8 @@ class GraphView @JvmOverloads constructor(
             val tempy = gh -  (i.get(1).toFloat() - minY)*yDiv
             path.moveTo(tempx, tempy)
 
+//            Log.d(TAG, "generateGraph: xpos:${tempx}")
+
             //fill
             arPath.apply {
                 moveTo(tempx, gh)
@@ -198,12 +208,17 @@ class GraphView @JvmOverloads constructor(
         val temp = ArrayList<Double>()
 
         for (i in data){
-            if((i.get(0).toFloat() - minX)*xDiv == x){
 
+            val coord = (i.get(0).toFloat()-minX)*xDiv
+
+//            Log.d(TAG, "findMatch: coord:$coord")
+            if (x/coord <= 1){
                 temp.add(i.get(0))
                 temp.add(i.get(1))
-
+                Log.d(TAG, "findMatch: coord:$coord")
+                return temp
             }
+
         }
 
         return temp
@@ -222,17 +237,53 @@ class GraphView @JvmOverloads constructor(
             when(event.actionMasked){
 
                 MotionEvent.ACTION_DOWN->{
+                    if (x!! < gw) {
+//                    Log.d(TAG, "onTouchEvent: ${String.format("%.2f",findMatch(x!!).get(0))}")
 
-                    Log.d(TAG, "onTouchEvent: ${findMatch(x!!)}")
+                        xCord = x
+                        yCord = y!!
+                        findMatch(x).apply {
+                            if (size != 0){
+//                                xCord =  (get(0).toFloat()-minX)*xDiv
+//                                yCord = (get(1).toFloat()-minY)*yDiv
+                                viewPoint = true
+                            }else {
+                                viewPoint = false
+                            }
+                        }
 
 
+                    }
                     return true
                 }
                 
                 MotionEvent.ACTION_MOVE->{
 
-                    Log.d(TAG, "onTouchEvent: moved  ${x} , ${y}")
-                    
+//                    Log.d(TAG, "onTouchEvent: moved  ${x} , ${y}")
+                    if (x!! < gw){
+
+                        xCord = x
+                        yCord = y!!
+                        findMatch(x).apply {
+                            if (size != 0){
+//                                xCord =  (get(0).toFloat()-minX)*xDiv
+//                                yCord = (get(1).toFloat()-minY)*yDiv
+                                viewPoint = true
+                            }else {
+                                viewPoint = false
+                                Log.d(TAG, "onTouchEvent: false")
+                            }
+                        }
+                    }
+//                    Log.d(TAG, "onTouchEvent: ${String.format("%.2f",findMatch(x!!).get(0))}")
+
+                    return true
+                }
+
+                MotionEvent.ACTION_UP->{
+
+                    viewPoint =false
+
                     return true
                 }
 

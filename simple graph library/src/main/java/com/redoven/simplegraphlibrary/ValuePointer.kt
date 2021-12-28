@@ -19,11 +19,11 @@ class ValuePointer {
     private val path = Path()
     private val paint = Paint()
 
-    fun drawPoint(c: Canvas ,x:Float,y:Float , w:Float,h:Float){
+    fun drawPoint(c: Canvas ,x:Float,y:Float , w:Float,h:Float,flag:Boolean){
 
-        init()
-        drawLine(x,y,w,h)
-        c.drawPath(path, paint)
+    init()
+    drawLine(x, y, w, h)
+    c.drawPath(path, paint)
 
     }
 
