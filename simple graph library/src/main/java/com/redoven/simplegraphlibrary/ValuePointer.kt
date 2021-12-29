@@ -1,19 +1,20 @@
 package com.redoven.simplegraphlibrary
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.icu.text.MessageFormat.format
 import android.text.format.DateFormat.format
+import android.util.Log
 import java.lang.String.format
 import java.sql.Timestamp
 import java.text.DateFormat
 import java.text.MessageFormat.format
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ValuePointer {
+
+    private val TAG = "ValuePointer"
 
 
     //graphics
@@ -29,8 +30,20 @@ class ValuePointer {
             init()
             c.drawLine(x,h,x,75f,paint)
             c.drawCircle(x,h - y,4.5f*1.25f,cPaint)
-            c.drawText(convertToDate(x,minX,xDiv),x,h - y,tPaint)
-
+            val date = convertToDate(x, minX, xDiv)
+            val yVal =  NumberFormat.getInstance(Locale("en", "IN"))
+                .format(convertToYValue(y, minY, yDiv))
+            if (x < w/2) {
+                c.drawText(date, x, 75f, tPaint)
+                c.drawText(yVal, x, 75f + 40f, tPaint)
+            }else if (x >=w/2){
+                val tempPaint = Paint()
+                tempPaint.textSize = 35f
+                val sizeA = tempPaint.measureText(date,0,date.length)
+                val sizeB = tempPaint.measureText(yVal,0,yVal.length)
+                c.drawText(date, x - sizeA, 75f, tPaint)
+                c.drawText(yVal, x - sizeB, 75f + 40f, tPaint)
+            }
         }
     }
 
@@ -54,7 +67,7 @@ class ValuePointer {
         val time = (value/div) + min
         val stamp = Timestamp(time.toLong())
 //        return Date(stamp.time).toString()
-        return SimpleDateFormat("dd/MM/yyyy").format(Date(stamp.time))
+        return SimpleDateFormat("HH:mm:ss | dd/MM/yyyy").format(Date(stamp.time))
     }
 
     fun convertToYValue(value:Float,min:Float,div:Float):Float{
