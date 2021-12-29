@@ -61,6 +61,9 @@ class GraphView @JvmOverloads constructor(
     private var gh = 0.0f
     private var gw = 0.0f
 
+    //scale differentiator
+    private var diff = 75f
+
     //bools
     private var viewPoint = false
     private var drawComplete = false
@@ -90,7 +93,7 @@ class GraphView @JvmOverloads constructor(
                 minY = get(0).get(1).toFloat()
                 maxY = get(lastIndex).get(1).toFloat()
 //                Log.d(TAG, "init: scale of  h: ${gh} y1: ${gh/(get(lastIndex).get(1) - get(0).get(1)).toFloat()}")
-                yDiv = gh/(maxY - minY)
+                yDiv = (gh-diff)/(maxY - minY)
 
                 //scale of x
                 sortBy { it[0] }
@@ -169,7 +172,7 @@ class GraphView @JvmOverloads constructor(
 
             //stroke
             val tempx = (i.get(0).toFloat() - minX)*xDiv
-            val tempy = gh -  (i.get(1).toFloat() - minY)*yDiv
+            val tempy = (gh) -  (i.get(1).toFloat() - minY)*yDiv
             path.moveTo(tempx, tempy)
 
 //            Log.d(TAG, "generateGraph: xpos:${tempx}")
@@ -183,7 +186,7 @@ class GraphView @JvmOverloads constructor(
             //check if end reached
             if ((j+1) < data.size) {
                 val tempxline = (data.get(j + 1).get(0).toFloat() - minX) * xDiv
-                val tempyline =  gh - (data.get(j + 1).get(1).toFloat() - minY) * yDiv
+                val tempyline =  (gh) - (data.get(j + 1).get(1).toFloat() - minY) * yDiv
 
                 //stroke
                 path.lineTo(
