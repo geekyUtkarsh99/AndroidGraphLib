@@ -14,9 +14,6 @@ import java.util.*
 
 class ValuePointer {
 
-    private val TAG = "ValuePointer"
-
-
     //graphics
     private val paint = Paint()
     private val cPaint = Paint()
@@ -29,7 +26,9 @@ class ValuePointer {
 
             init()
             c.drawLine(x,h,x,75f,paint)
-            c.drawCircle(x,h - y,4.5f*1.25f,cPaint)
+            c.drawCircle(x,h - y,4.5f*1.25f,cPaint) //pointer
+
+            //display x and y points
             val date = convertToDate(x, minX, xDiv)
             val yVal =  NumberFormat.getInstance(Locale("en", "IN"))
                 .format(convertToYValue(y, minY, yDiv))
@@ -70,6 +69,7 @@ class ValuePointer {
         return SimpleDateFormat("HH:mm:ss | dd/MM/yyyy").format(Date(stamp.time))
     }
 
+    //convert to the y original value
     fun convertToYValue(value:Float,min:Float,div:Float):Float{
 
         return (value/div)+min
