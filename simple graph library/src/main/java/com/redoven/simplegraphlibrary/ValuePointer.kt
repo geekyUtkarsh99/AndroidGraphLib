@@ -10,6 +10,7 @@ import java.lang.String.format
 import java.sql.Timestamp
 import java.text.DateFormat
 import java.text.MessageFormat.format
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ValuePointer {
@@ -26,8 +27,7 @@ class ValuePointer {
         if (flag) {
 
             init()
-
-            c.drawLine(x,h,x,0f,paint)
+            c.drawLine(x,h,x,75f,paint)
             c.drawCircle(x,h - y,4.5f*1.25f,cPaint)
             c.drawText(convertToDate(x,minX,xDiv),x,h - y,tPaint)
 
@@ -43,7 +43,7 @@ class ValuePointer {
             color = Color.BLUE
         }
         tPaint.apply {
-            color = Color.BLUE
+            color = Color.BLACK
             textSize = 35f
         }
     }
@@ -53,7 +53,8 @@ class ValuePointer {
     fun convertToDate(value:Float,min:Float,div:Float) : String{
         val time = (value/div) + min
         val stamp = Timestamp(time.toLong())
-        return Date(stamp.time).toString()
+//        return Date(stamp.time).toString()
+        return SimpleDateFormat("dd/MM/yyyy").format(Date(stamp.time))
     }
 
     fun convertToYValue(value:Float,min:Float,div:Float):Float{
