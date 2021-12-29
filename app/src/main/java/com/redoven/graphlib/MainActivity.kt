@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
         retroinst.service.getList("bitcoin" , mapOf(
             "vs_currency" to "inr",
-            "days" to "1" //not greater then 1825 !!
+            "days" to "1825" //not greater then 1825 !!
         ) ).enqueue(object:Callback<data>{
             override fun onResponse(call: Call<data>, response: Response<data>) {
                 val res = response.body()
