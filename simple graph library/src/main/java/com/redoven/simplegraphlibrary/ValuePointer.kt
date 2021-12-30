@@ -27,7 +27,7 @@ class ValuePointer {
         if (flag) {
 
             init()
-            c.drawLine(x,h,x,75f,paint)
+            c.drawLine(x,h,x,35f,paint)
             c.drawCircle(x,h - y,4.5f*1.25f,cPaint) //pointer
 
             //display x and y points
@@ -40,10 +40,20 @@ class ValuePointer {
             val sizeB = tempPaint.measureText(yVal,0,yVal.length)
             if (x < w/2) {
                 c.drawRoundRect(x,35f,x+sizeA+15f,45f+40f*2,15f,15f,rPAint) //draw balloon-left
+//                c.drawRoundRect(x,35f,x+sizeA+15f,45f+40f*2,15f,15f,Paint().apply { style =
+//                    Paint.Style.STROKE
+//                color = Color.BLACK
+//                    strokeWidth = 3f
+//                }) //draw balloon-left border
                 c.drawText(date, x+10f, 75f, tPaint)
                 c.drawText(yVal, x+10f, 75f + 40f, tPaint)
             }else if (x >=w/2){
-                c.drawRoundRect(x-sizeA-15f,35f,x,45f+40f*2,15f,15f,rPAint)
+                c.drawRoundRect(x-sizeA-15f,35f,x,45f+40f*2,15f,15f,rPAint)//draw balloon-right
+//                c.drawRoundRect(x,35f,x+sizeA+15f,45f+40f*2,15f,15f,Paint().apply { style =
+//                    Paint.Style.STROKE
+//                    color = Color.LTGRAY
+//                    strokeWidth = 3f
+//                }) //draw balloon-right border
                 c.drawText(date, x - sizeA-10f, 75f, tPaint)
                 c.drawText(yVal, x - sizeB-10f, 75f + 40f, tPaint)
             }
