@@ -4,6 +4,7 @@ import android.graphics.*
 import android.icu.text.MessageFormat.format
 import android.text.format.DateFormat.format
 import android.util.Log
+import androidx.annotation.ColorRes
 import java.lang.String.format
 import java.sql.Timestamp
 import java.text.DateFormat
@@ -19,6 +20,7 @@ class ValuePointer {
     private val cPaint = Paint()
 
     private val tPaint = Paint()
+    private val rPAint = Paint()
 
     fun drawPoint(c: Canvas ,x:Float,y:Float , w:Float,h:Float,minX:Float,minY:Float,xDiv:Float,yDiv:Float,flag:Boolean){
 
@@ -32,14 +34,15 @@ class ValuePointer {
             val date = convertToDate(x, minX, xDiv)
             val yVal =  NumberFormat.getInstance(Locale("en", "IN"))
                 .format(convertToYValue(y, minY, yDiv))
+            val tempPaint = Paint()
+            tempPaint.textSize = 35f
+            val sizeA = tempPaint.measureText(date,0,date.length)
+            val sizeB = tempPaint.measureText(yVal,0,yVal.length)
             if (x < w/2) {
+                c.drawRoundRect(x,75f,x+sizeA,75f+40f*2,5f,5f,rPAint)
                 c.drawText(date, x, 75f, tPaint)
                 c.drawText(yVal, x, 75f + 40f, tPaint)
             }else if (x >=w/2){
-                val tempPaint = Paint()
-                tempPaint.textSize = 35f
-                val sizeA = tempPaint.measureText(date,0,date.length)
-                val sizeB = tempPaint.measureText(yVal,0,yVal.length)
                 c.drawText(date, x - sizeA, 75f, tPaint)
                 c.drawText(yVal, x - sizeB, 75f + 40f, tPaint)
             }
@@ -58,8 +61,10 @@ class ValuePointer {
             color = Color.BLACK
             textSize = 35f
         }
+        rPAint.apply {
+            color = Color.YELLOW
+        }
     }
-
 
     //convert timestamp to date
     fun convertToDate(value:Float,min:Float,div:Float) : String{
