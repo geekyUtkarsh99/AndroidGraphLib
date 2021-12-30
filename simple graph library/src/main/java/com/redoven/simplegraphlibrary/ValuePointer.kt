@@ -39,9 +39,9 @@ class ValuePointer {
             val sizeA = tempPaint.measureText(date,0,date.length)
             val sizeB = tempPaint.measureText(yVal,0,yVal.length)
             if (x < w/2) {
-                c.drawRoundRect(x,75f,x+sizeA,75f+40f*2,5f,5f,rPAint)
-                c.drawText(date, x, 75f, tPaint)
-                c.drawText(yVal, x, 75f + 40f, tPaint)
+                c.drawRoundRect(x,35f,x+sizeA+15f,45f+40f*2,15f,15f,rPAint)
+                c.drawText(date, x+10f, 75f, tPaint)
+                c.drawText(yVal, x+10f, 75f + 40f, tPaint)
             }else if (x >=w/2){
                 c.drawText(date, x - sizeA, 75f, tPaint)
                 c.drawText(yVal, x - sizeB, 75f + 40f, tPaint)
@@ -62,7 +62,7 @@ class ValuePointer {
             textSize = 35f
         }
         rPAint.apply {
-            color = Color.YELLOW
+            color = Color.parseColor("#4000FFFF")
         }
     }
 

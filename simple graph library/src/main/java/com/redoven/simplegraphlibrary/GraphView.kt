@@ -62,7 +62,7 @@ class GraphView @JvmOverloads constructor(
     private var gw = 0.0f
 
     //scale differentiator
-    private var diff = 75f
+    private var diff = 130f
 
     //bools
     private var viewPoint = false
