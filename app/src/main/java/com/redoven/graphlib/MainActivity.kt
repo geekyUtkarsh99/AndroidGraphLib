@@ -126,6 +126,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+
         dataset.observe(this, {
             findViewById<GraphView>(R.id.graph).apply{
                 if (it != null) {
