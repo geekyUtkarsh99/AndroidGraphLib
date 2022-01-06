@@ -123,17 +123,17 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }
 
-        var dataset = MutableLiveData<ArrayList<ArrayList<Double>>>()
+        var dataset = MutableLiveData<data>()
 
         retroinst.service.getList("bitcoin" , mapOf(
             "vs_currency" to "inr",
-            "days" to "1825" //not greater then 1825 !!
+            "days" to "1" //not greater then 1825 !!
         ) ).enqueue(object:Callback<data>{
             override fun onResponse(call: Call<data>, response: Response<data>) {
                 val res = response.body()
 
                 Log.d(TAG, "onResponse: ${res?.prices}")
-                dataset.value= res?.prices
+                dataset.value= res!!
 
             }
 
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             findViewById<GraphView>(R.id.graph).apply{
                 if (it != null) {
                     strokewidth = 4.5f
-                    addValue(it)
+                    addValue(it.prices!!)
                 }
             }
         })
